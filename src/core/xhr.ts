@@ -4,7 +4,7 @@ import { createError } from '../helpers/error'
 
 export default function(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
-    const { url, method = 'get', data = null, headers, responseType, timeout } = config
+    const { url, method = 'get', data = null, headers, responseType, timeout, cancelToken } = config
 
     const request = new XMLHttpRequest()
 
@@ -49,7 +49,25 @@ export default function(config: AxiosRequestConfig): AxiosPromise {
       reject(createError(`Timeout of ${timeout} ms exceeded`, config, 'ECONNABORTED', request))
     }
 
+    processCancel()
+
     request.send(data)
+
+    function processCancel(): void {
+      if (cancelToken) {
+        cancelToken.promise
+          .then(reason => {
+            request.abort()
+            reject(reason)
+          })
+          .catch(
+            /* istanbul ignore next */
+            () => {
+              // do nothing
+            }
+          )
+      }
+    }
 
     function handleResponse(response: AxiosResponse): void {
       if (response.status >= 200 && response.status < 300) {
