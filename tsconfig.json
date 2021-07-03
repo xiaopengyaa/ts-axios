@@ -18,5 +18,5 @@
   },
   "include": [
     "src"
-  ]
+, "test/helpers/url.spec.ts"  ]
 }
