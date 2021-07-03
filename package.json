@@ -1,6 +1,6 @@
 {
   "name": "ts-axios-xiaopengyaa",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ts-axios",
   "keywords": [],
   "main": "dist/axios.umd.js",
